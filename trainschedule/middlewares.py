@@ -4,8 +4,10 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+import random
 
 from scrapy import signals
+from scrapy.utils.project import get_project_settings
 
 
 class TrainscheduleSpiderMiddleware(object):
@@ -61,6 +63,10 @@ class TrainscheduleDownloaderMiddleware(object):
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
 
+    def __init__(self):
+        settings = get_project_settings()
+        self.user_agents = settings.get('USER_AGENTS')
+
     @classmethod
     def from_crawler(cls, crawler):
         # This method is used by Scrapy to create your spiders.
@@ -69,16 +75,10 @@ class TrainscheduleDownloaderMiddleware(object):
         return s
 
     def process_request(self, request, spider):
-        # Called for each request that goes through the downloader
-        # middleware.
-
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
-        return None
+        agent = random.choice(self.user_agents)
+        referer = request.meta.get('referer', None)
+        request.headers["User-Agent"] = agent
+        request.headers["Referer"] = referer
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.
