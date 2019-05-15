@@ -12,12 +12,9 @@ class StationspiderSpider(scrapy.Spider):
         print(station_infos)
         station_info = station_infos.split("'")[1]
         print(station_info)
-        station_Array = station_info.split("|")
-        print(type(station_Array))
-        for index, info in enumerate(station_Array, 1):
-            if index % 5 == 0:
-                print(info, "  ")
-            else:
-                print(info, end="    ")
-
-
+        station_Array = station_info.split("@")
+        #for index, info in enumerate(station_Array, 1):
+        for info in station_Array:
+            for detail in info.split("|"):
+                print(detail, end="    ")
+            print("")

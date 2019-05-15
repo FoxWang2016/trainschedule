@@ -19,5 +19,14 @@ class TrainnumberSpider(scrapy.Spider):
             for train_type in train_number:
                 station_info = train_number.get(train_type)
                 for train_code in station_info:
-                    print(date_key, "   ", train_type, "   ", train_code.get("station_train_code"), "   "
+                    station_train_code = train_code.get("station_train_code")
+                    start_station = ""
+                    end_station = ""
+                    number = ""
+                    if (station_train_code.find("(")):
+                        number = station_train_code.split("(")[0]
+                        stations = station_train_code.split("(")[1]
+                        start_station = stations.split("-")[0]
+                        end_station = stations.split("-")[1][:-1]
+                    print(date_key, "   ", train_type, "   ", number, "   ", start_station, "   ", end_station, "   "
                           , train_code.get("train_no"))
