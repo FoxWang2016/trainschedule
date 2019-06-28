@@ -12,3 +12,23 @@ class TrainscheduleItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
+
+class StationItem(scrapy.Item):
+    id = scrapy.Field()
+    pingyinma = scrapy.Field()
+    stationName = scrapy.Field()
+    telegraphCode = scrapy.Field()
+    pingyin = scrapy.Field()
+    acronym = scrapy.Field()
+
+class TrainNumber(scrapy.Item):
+    startDate = scrapy.Field()
+    trainType = scrapy.Field()
+    trainNumber = scrapy.Field()
+    departureStation = scrapy.Field()
+    departureAcronym = scrapy.Field()
+    terminus = scrapy.Field()
+    terminusAcronym = scrapy.Field()
+    trainCode = scrapy.Field()
+
+

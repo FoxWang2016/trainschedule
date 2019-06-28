@@ -104,11 +104,11 @@ REDIS_HOST = "132.232.60.239"
 # 指定数据库的端口号
 REDIS_PORT = 7379
 # redis密码
-REDIS_PASSWORD = {'password': 'ThisIsASecurityRedis', }
+REDIS_PASSWORD = 'ThisIsASecurityRedis'
 # redis代理池
 REDIS_IP_PROXY_NAME = 'common:ip_proxy'
 # redis 的db号
-REDIS_DB_NUM = 0
+REDIS_DB_NUM = 1
 
 #mongo所在主机ip
 MONGO_HOST = "132.232.60.239"
