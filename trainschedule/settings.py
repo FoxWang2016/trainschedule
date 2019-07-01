@@ -35,7 +35,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 10
 DOWNLOAD_TIMEOUT = 30
 
 # The download delay setting will honor only one of:
@@ -74,9 +74,9 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'trainschedule.pipelines.TrainschedulePipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'trainschedule.pipelines.TrainschedulePipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -118,3 +118,11 @@ MONGO_PORT = 27017
 MONGO_DB = "sinaWeibo"
 #collection句柄
 MONGO_COLL = "user"
+
+
+LOG_ENABLED = True
+LOG_ENCODING = 'utf-8'
+import datetime
+to_day = datetime.datetime.now()
+LOG_FILE = "log/train_{}_{}_{}.log".format(to_day.year, to_day.month, to_day.day)
+LOG_LEVEL = "ERROR"

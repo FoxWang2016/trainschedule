@@ -8,12 +8,12 @@ import scrapy
 from scrapy.utils.project import get_project_settings
 
 from trainschedule.items import TrainNumber
-
+from scrapy import cmdline
 
 class TrainnumberSpider(scrapy.Spider):
     name = 'trainNumber'
     allowed_domains = ['kyfw.12306.cn']
-    start_urls = ['https://kyfw.12306.cn/otn/resources/js/query/train_list.js']
+    start_urls = ['https://kyfw.12306.cn/otn/resources/js/query/train_list.js?station_version=1.9104']
 
     def __init__(self):
         settings = get_project_settings()
@@ -33,29 +33,30 @@ class TrainnumberSpider(scrapy.Spider):
                 station_info = train_number.get(train_type)
                 for train_code in station_info:
                     station_train_code = train_code.get("station_train_code")
-                    start_station = ""
-                    end_station = ""
-                    number = ""
+                    # start_station = ""
+                    # end_station = ""
+                    # number = ""
                     if (station_train_code.find("(")):
                         number = station_train_code.split("(")[0]
                         stations = station_train_code.split("(")[1]
-                        start_station = stations.split("-")[0]
-                        end_station = stations.split("-")[1][:-1]
+                        start_station = stations.split("-")[0].strip()
+                        end_station = stations.split("-")[1][:-1].strip()
                         trainNumber = TrainNumber()
-                        trainNumber.startDate = date_key
-                        trainNumber.trainType = train_type
-                        trainNumber.trainNumber = number
-                        trainNumber.departureStation = start_station
-                        trainNumber.departureAcronym = str(self.redis.hget("china_train_station_telegraph_code"
-                                                                           , start_station), encoding="utf8")
-                        trainNumber.terminus = end_station
-                        trainNumber.terminusAcronym = str(self.redis.hget("china_train_station_telegraph_code"
-                                                                          , end_station), encoding="utf8")
-                        trainNumber.trainCode = train_code.get("train_no")
-                        yield trainNumber
+                        trainNumber["startDate"] = date_key
+                        trainNumber["trainType"] = train_type
+                        trainNumber["trainNumber"] = number
+                        trainNumber["departureStation"] = start_station
+                        trainNumber["terminus"] = end_station
+                        try:
+                            trainNumber["departureAcronym"] = str(self.redis.hget("china_train_station_telegraph_code",
+                                                                                  start_station), encoding="utf8")
+                            trainNumber["terminusAcronym"] = str(self.redis.hget("china_train_station_telegraph_code",
+                                                                                 end_station), encoding="utf8")
+                        except Exception as e:
+                            print("ERROR:", date_key, "   ", train_type, "   ", number, "   ", start_station, "   "
+                                  , "   ", end_station, "   ", train_code.get("train_no"), "   ", e)
+                            #cmdline.execute("scrapy crawl stationSpider".split())
+                            #yield scrapy.Request(self.start_urls[0], self.parse)
 
-                    print(date_key, "   ", train_type, "   ", number, "   ", start_station, "   "
-                          , str(self.redis.hget("china_train_station_telegraph_code", start_station), encoding="utf8")
-                          , "   ", end_station, "   "
-                          , str(self.redis.hget("china_train_station_telegraph_code", end_station), encoding="utf8")
-                          , "   ", train_code.get("train_no"))
+                        trainNumber["trainCode"] = train_code.get("train_no")
+                        yield trainNumber

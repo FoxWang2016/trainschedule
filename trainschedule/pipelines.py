@@ -15,8 +15,12 @@ class TrainschedulePipeline(object):
         self.redis_host = settings.get('REDIS_HOST')
         self.redis_port = settings.get('REDIS_PORT')
         self.redis_password = settings.get('REDIS_PASSWORD')
-        self.redis = redis.Redis(host=self.redis_host, port=self.redis_port, password=self.redis_password)
+        self.redis_db_num = settings.get('REDIS_DB_NUM')
+        self.redis = redis.Redis(host=self.redis_host, port=self.redis_port
+                                 , password=self.redis_password, db=self.redis_db_num)
 
     def process_item(self, item, spider):
-        self.redis.sadd("china_train_station_info", item)
+        index = self.redis.sadd("china_train_number_info_check", item)
+        if index:
+            self.redis.lpush("china_train_number_info_queue", item)
         return item
