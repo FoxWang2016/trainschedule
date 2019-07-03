@@ -76,8 +76,18 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'trainschedule.pipelines.TrainschedulePipeline': 300,
+    'scrapy_redis.pipelines.RedisPipeline': 400,
+
 }
 
+# 使用scrapy-redis里的去重组件，不使用scrapy默认的去重方式picklecompat
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+# 使用scrapy-redis里的调度器组件，不使用默认的调度器
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+# 允许暂停，redis请求记录不丢失
+SCHEDULER_PERSIST = True
+# 默认的scrapy-redis请求队列形式（按优先级）
+SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderPriorityQueue"
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
@@ -104,11 +114,12 @@ REDIS_HOST = "132.232.60.239"
 # 指定数据库的端口号
 REDIS_PORT = 7379
 # redis密码
+REDIS_PARAMS = {'password': 'ThisIsASecurityRedis'}
 REDIS_PASSWORD = 'ThisIsASecurityRedis'
 # redis代理池
 REDIS_IP_PROXY_NAME = 'common:ip_proxy'
 # redis 的db号
-REDIS_DB_NUM = 1
+REDIS_DB_NUM = 0
 
 #mongo所在主机ip
 MONGO_HOST = "132.232.60.239"
@@ -119,10 +130,13 @@ MONGO_DB = "sinaWeibo"
 #collection句柄
 MONGO_COLL = "user"
 
+#elasticsearch 配置
+ES_HOST = ["132.232.60.239:8200", "132.232.60.239:8400"]
 
-LOG_ENABLED = True
-LOG_ENCODING = 'utf-8'
-import datetime
-to_day = datetime.datetime.now()
-LOG_FILE = "log/train_{}_{}_{}.log".format(to_day.year, to_day.month, to_day.day)
-LOG_LEVEL = "ERROR"
+
+# LOG_ENABLED = True
+# LOG_ENCODING = 'utf-8'
+# import datetime
+# to_day = datetime.datetime.now()
+# LOG_FILE = "log/train_{}_{}_{}.log".format(to_day.year, to_day.month, to_day.day)
+# LOG_LEVEL = "ERROR"

@@ -41,8 +41,8 @@ class StationspiderSpider(scrapy.Spider):
                     print(detail, end="    ")
                 print("")
                 if info != '':
-                    self.redis.hset("china_train_station_info", item["stationName"], item)
-                    self.redis.hset("china_train_station_telegraph_code", item["stationName"], item["telegraphCode"])
+                    self.redis.hset("12306_train:china_train_station_info", item["stationName"], item)
+                    self.redis.hset("12306_train:china_train_station_telegraph_code", item["stationName"], item["telegraphCode"])
         except:
             print("ERROR:", index_info)
 

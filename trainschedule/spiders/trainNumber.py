@@ -1,7 +1,7 @@
 
 # -*- coding: utf-8 -*-
 import json
-import ast
+import logging
 
 import redis
 import scrapy
@@ -41,6 +41,7 @@ class TrainnumberSpider(scrapy.Spider):
                         stations = station_train_code.split("(")[1]
                         start_station = stations.split("-")[0].strip()
                         end_station = stations.split("-")[1][:-1].strip()
+                        trainCode = train_code.get("train_no")
                         trainNumber = TrainNumber()
                         trainNumber["startDate"] = date_key
                         trainNumber["trainType"] = train_type
@@ -48,15 +49,22 @@ class TrainnumberSpider(scrapy.Spider):
                         trainNumber["departureStation"] = start_station
                         trainNumber["terminus"] = end_station
                         try:
-                            trainNumber["departureAcronym"] = str(self.redis.hget("china_train_station_telegraph_code",
+                            departureAcronym = str(self.redis.hget("12306_train:china_train_station_telegraph_code",
                                                                                   start_station), encoding="utf8")
-                            trainNumber["terminusAcronym"] = str(self.redis.hget("china_train_station_telegraph_code",
+                            terminusAcronym = str(self.redis.hget("12306_train:china_train_station_telegraph_code",
                                                                                  end_station), encoding="utf8")
+                            trainNumber["departureAcronym"] = departureAcronym
+                            trainNumber["terminusAcronym"] = terminusAcronym
+                            trainNumber["detailUrl"] = "https://kyfw.12306.cn/otn/czxx/queryByTrainNo?" \
+                                                       "train_no={}&from_station_telecode={}&" \
+                                                       "to_station_telecode={}&depart_date={}".format(trainCode,
+                                                                                                      departureAcronym,
+                                                                                                      terminusAcronym,
+                                                                                                      date_key)
                         except Exception as e:
-                            print("ERROR:", date_key, "   ", train_type, "   ", number, "   ", start_station, "   "
-                                  , "   ", end_station, "   ", train_code.get("train_no"), "   ", e)
+                            logging.error("ERROR:", date_key, "   ", train_type, "   ", number, "   ", start_station
+                                          , "   ", end_station, "   ", train_code.get("train_no"), "   ", e)
                             #cmdline.execute("scrapy crawl stationSpider".split())
                             #yield scrapy.Request(self.start_urls[0], self.parse)
-
-                        trainNumber["trainCode"] = train_code.get("train_no")
+                        trainNumber["trainCode"] = trainCode
                         yield trainNumber

@@ -30,5 +30,5 @@ class TrainNumber(scrapy.Item):
     terminus = scrapy.Field()
     terminusAcronym = scrapy.Field()
     trainCode = scrapy.Field()
-
-
+    detailUrl = scrapy.Field()
+    details = scrapy.Field()
