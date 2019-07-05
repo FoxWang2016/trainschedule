@@ -112,7 +112,7 @@ SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderPriorityQueue"
 # 指定数据库的主机IP
 REDIS_HOST = "132.232.60.239"
 # 指定数据库的端口号
-REDIS_PORT = 7379
+REDIS_PORT = 8000
 # redis密码
 REDIS_PARAMS = {'password': 'ThisIsASecurityRedis'}
 REDIS_PASSWORD = 'ThisIsASecurityRedis'
@@ -134,9 +134,9 @@ MONGO_COLL = "user"
 ES_HOST = ["132.232.60.239:8200", "132.232.60.239:8400"]
 
 
-# LOG_ENABLED = True
-# LOG_ENCODING = 'utf-8'
-# import datetime
-# to_day = datetime.datetime.now()
-# LOG_FILE = "log/train_{}_{}_{}.log".format(to_day.year, to_day.month, to_day.day)
-# LOG_LEVEL = "ERROR"
+LOG_ENABLED = True
+LOG_ENCODING = 'utf-8'
+import datetime
+to_day = datetime.datetime.now()
+LOG_FILE = "log/train_{}_{}_{}.log".format(to_day.year, to_day.month, to_day.day)
+LOG_LEVEL = "ERROR"

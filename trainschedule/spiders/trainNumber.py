@@ -62,7 +62,7 @@ class TrainnumberSpider(scrapy.Spider):
                                                                                                       terminusAcronym,
                                                                                                       date_key)
                         except Exception as e:
-                            logging.error("ERROR:", date_key, "   ", train_type, "   ", number, "   ", start_station
+                            logging.error("ERROR for trainNumber:", date_key, "   ", train_type, "   ", number, "   ", start_station
                                           , "   ", end_station, "   ", train_code.get("train_no"), "   ", e)
                             #cmdline.execute("scrapy crawl stationSpider".split())
                             #yield scrapy.Request(self.start_urls[0], self.parse)
